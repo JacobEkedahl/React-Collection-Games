@@ -77,12 +77,6 @@ class Game extends React.Component {
         };
     }
 
-    changeColor() {
-        this.setState({
-            black: !this.state.black
-        })
-    }
-
     handleClick(i) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
@@ -101,6 +95,7 @@ class Game extends React.Component {
                     squares: squares
                 }
             ]),
+            activeIndex: null,
             stepNumber: history.length,
             isNext: !this.state.isNext
         });
