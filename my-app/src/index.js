@@ -44,19 +44,43 @@ class Board extends React.Component {
         );
     }
 }
+
+class Move extends React.Component {
+    handleClick = () => this.props.onClick(this.props.index)
+
+    render() {
+        return <button
+            type='button'
+            className={
+                this.props.isActive ? 'active' : 'album'
+            }
+            onClick={this.handleClick}
+        >
+            <span>{this.props.name}</span>
+        </button>
+    }
+}
+
 class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             history: [
                 {
-                    colAndRow: [null,null],
+                    colAndRow: [null, null],
                     squares: Array(9).fill(null)
                 }
             ],
             stepNumber: 0,
             isNext: true,
+            activeIndex: null,
         };
+    }
+
+    changeColor() {
+        this.setState({
+            black: !this.state.black
+        })
     }
 
     handleClick(i) {
@@ -84,7 +108,8 @@ class Game extends React.Component {
 
     jumpTo(step) {
         this.setState({
-            stepNumber : step,
+            activeIndex: step,
+            stepNumber: step,
             isNext: (step % 2) === 0
         })
     }
@@ -103,7 +128,11 @@ class Game extends React.Component {
                 'Got to game start';
             return (
                 <li key={move}>
-                    <button onClick={() => this.jumpTo(move)}>{desc}</button>
+                    <Move
+                        name={desc}
+                        index={move}
+                        isActive={this.state.activeIndex === move}
+                        onClick={(step) => this.jumpTo(move)} />
                 </li>
             )
         })
@@ -161,15 +190,15 @@ function calculateWinner(squares) {
 
 function getColAndRow(index) {
     const result = [
-        [0,0],
-        [1,0],
-        [2,0],
-        [0,1],
-        [1,1],
-        [2,1],
-        [0,2],
-        [1,2],
-        [2,2],
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [0, 1],
+        [1, 1],
+        [2, 1],
+        [0, 2],
+        [1, 2],
+        [2, 2],
     ];
 
     return result[index];
