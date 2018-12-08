@@ -50,6 +50,7 @@ class Game extends React.Component {
         this.state = {
             history: [
                 {
+                    colAndRow: [null,null],
                     squares: Array(9).fill(null)
                 }
             ],
@@ -62,6 +63,8 @@ class Game extends React.Component {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
+        const colAndRow = getColAndRow(i);
+
         if (calculateWinner(squares) || squares[i]) {
             return;
         }
@@ -70,6 +73,7 @@ class Game extends React.Component {
         this.setState({
             history: history.concat([
                 {
+                    colAndRow: colAndRow,
                     squares: squares
                 }
             ]),
@@ -92,8 +96,10 @@ class Game extends React.Component {
         const winner = calculateWinner(squares);
 
         const moves = history.map((step, move) => {
+            const col = step.colAndRow[0];
+            const row = step.colAndRow[1];
             const desc = move ?
-                'Go to move #' + move :
+                'Go to move #' + move + ' (' + col + ":" + row + ')' :
                 'Got to game start';
             return (
                 <li key={move}>
@@ -151,6 +157,22 @@ function calculateWinner(squares) {
     }
 
     return null;
+}
+
+function getColAndRow(index) {
+    const result = [
+        [0,0],
+        [1,0],
+        [2,0],
+        [0,1],
+        [1,1],
+        [2,1],
+        [0,2],
+        [1,2],
+        [2,2],
+    ];
+
+    return result[index];
 }
 
 ReactDOM.render(<Game />, document.getElementById("root"));
