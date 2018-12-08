@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import Toggle from 'react-toggle';
+import "react-toggle/style.css"
 
 function Square(props) {
     return (
@@ -19,26 +21,6 @@ class Board extends React.Component {
             />
         )
     }
-
-    /*
-    
-        <div className="board-row">
-            {this.renderSquare(0)}
-            {this.renderSquare(1)}
-            {this.renderSquare(2)}
-        </div>
-            <div className="board-row">
-                {this.renderSquare(3)}
-                {this.renderSquare(4)}
-                {this.renderSquare(5)}
-            </div>
-
-            <div className="board-row">
-                {this.renderSquare(6)}
-                {this.renderSquare(7)}
-                {this.renderSquare(8)}
-            </div>
-    */
 
     createBoard = () => {
         let board = []
@@ -85,9 +67,11 @@ class Move extends React.Component {
 class Game extends React.Component {
     constructor(props) {
         super(props);
+        this.toggleChanged = this.toggleChanged.bind(this);
         this.state = {
             history: [
                 {
+                    move: 0,
                     colAndRow: [null, null],
                     squares: Array(9).fill(null)
                 }
@@ -95,6 +79,7 @@ class Game extends React.Component {
             stepNumber: 0,
             isNext: true,
             activeIndex: null,
+            sortAsc: false,
         };
     }
 
@@ -112,6 +97,7 @@ class Game extends React.Component {
         this.setState({
             history: history.concat([
                 {
+                    move: this.state.stepNumber,
                     colAndRow: colAndRow,
                     squares: squares
                 }
@@ -126,29 +112,48 @@ class Game extends React.Component {
         this.setState({
             activeIndex: step,
             stepNumber: step,
-            isNext: (step % 2) === 0
+            isNext: (step % 2) === 0,
+            history: this.state.history.slice(0, step+1)
         })
     }
 
+    toggleChanged(checked) {
+        this.setState({
+            sortAsc: !this.state.sortAsc,
+        });
+        this.render()
+    }
+
     render() {
-        const history = this.state.history;
+        const history = this.state.history.slice();
         const current = history[this.state.stepNumber];
         const squares = current.squares;
         const winner = calculateWinner(squares);
+        
+        const sorted = history.slice();
+        if (this.state.sortAsc) {
+            sorted.reverse();
+        }
 
-        const moves = history.map((step, move) => {
+        const moves = sorted.map((step, move) => {
+            let index = move;
+            const len = history.length;
+            if (this.state.sortAsc) {
+                index = getReversedIndex(move, len);
+            }
             const col = step.colAndRow[0];
             const row = step.colAndRow[1];
-            const desc = move ?
-                'Go to move #' + move + ' (' + col + ":" + row + ')' :
+            const desc = index ?
+                'Go to move #' + index + ' (' + col + ":" + row + ')' :
                 'Got to game start';
+
             return (
-                <li key={move}>
+                <li key={index}>
                     <Move
                         name={desc}
-                        index={move}
-                        isActive={this.state.activeIndex === move}
-                        onClick={(step) => this.jumpTo(move)} />
+                        index={index}
+                        isActive={this.state.activeIndex === index}
+                        onClick={(step) => this.jumpTo(index)} />
                 </li>
             )
         })
@@ -172,6 +177,10 @@ class Game extends React.Component {
 
                 <div className="game-info">
                     <div>{status}</div>
+                    <Toggle
+                        checked={true}
+                        onChange={this.toggleChanged}
+                    />
                     <ol>{moves}</ol>
                 </div>
             </div>
@@ -218,6 +227,16 @@ function getColAndRow(index) {
     ];
 
     return result[index];
+}
+
+function handleChange(event) {
+    if (event.target.checked) {
+        alert('checked')
+    }
+}
+
+function getReversedIndex(index, length) {
+    return length - index -1;
 }
 
 ReactDOM.render(<Game />, document.getElementById("root"));
