@@ -1,6 +1,7 @@
 # A collection of different games
  * Tic-Tac-Toe [see tutorial](https://reactjs.org/tutorial/tutorial.html#setup-option-2-local-development-environment) 
  * Calculator (fun game huh) [see tutorial](https://www.youtube.com/watch?v=ZtU7Mhf9vN8)
+ * Game Of Life [see tutorial](https://www.youtube.com/watch?v=PM0_Er3SvFQ)
  
 ## TODO:
  * Pong

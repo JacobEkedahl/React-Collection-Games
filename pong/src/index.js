@@ -6,7 +6,7 @@ import './index.css';
 
 class Game extends React.Component {
     doSomething() {
-
+        
     }
 
     render() {
