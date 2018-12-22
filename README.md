@@ -14,5 +14,5 @@
  * Bootstrap-Aws journal app [repo tutorial](https://github.com/richardzcode/Journal-AWS-Amplify-Tutorial/tree/master/step-01)
 
  ## To create a new project:
- *Run in terminal: npx create-react-app <APP-NAME>
+ * Run in terminal: npx create-react-app <APP-NAME>
  * Remove current files in src/ and create files in src/ named index.css and index.js. Look at code in examples for help with what to import.
