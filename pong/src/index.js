@@ -4,46 +4,58 @@ import './index.css';
 
 
 
-class Game extends React.Component {
-    doSomething() {
+class Brick extends React.Component {
+    render() {
+        return (
+            <div className="Brick"></div>
+        );
+    }
+}
+class Bricks extends React.Component {
+    createField = () => {
+        let field = []
+        for (let i = 0; i < 22; i++) {
+            field.push(
+                <Brick className="Brick"></Brick>
+            )
+        }
 
+        return field
     }
 
     render() {
         return (
+            <div className="Bricks">
+                {this.createField()}
+            </div>
+
+        );
+    }
+}
+
+class Ball extends React.Component {
+    render() {
+        return (
+            <div className="Ball"></div>
+        );
+    }
+}
+
+class Player extends React.Component {
+    render() {
+        return (
+            <div className="Player"></div>
+        );
+    }
+}
+
+
+class Game extends React.Component {
+    render() {
+        return (
             <div className="Game">
-
-                <div className="Bricks">
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                    <div className="Brick"></div>
-                </div>
-
-                <div className="Ball">
-                    
-                </div>
-
-                <div className="Player">
-                </div>
+                <Bricks></Bricks>
+                <Ball></Ball>
             </div>
         );
     }
