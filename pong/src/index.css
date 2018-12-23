@@ -5,7 +5,6 @@ body {
     border: 2px solid black;
     width: 595px;
     height: 600px;
-    margin: auto;
     margin-top: 10px;
     background-color: deepskyblue;
 }
@@ -23,6 +22,7 @@ body {
 }
 
 .Bricks {
+    height: 200px;
     width: 600px;
 }
 
