@@ -1,0 +1,49 @@
+body {
+}
+
+.Game { 
+    border: 2px solid brown;
+    width: 595px;
+    height: 600px;
+    margin: auto;
+    margin-top: 10px;
+    background-image: url(https://images.all-free-download.com/images/graphiclarge/vintage_black_pattern_241388.jpg)
+}
+
+.Brick {
+    border: 2px solid black;
+    display: inline-block;
+    width: 49px;
+    height: 20px;
+    background-color: whitesmoke;
+    margin-left: 1px;
+    box-shadow: 0px 0px 20px white;
+}
+
+.Bricks {
+    width: 600px;
+}
+
+.Ball {
+    position: absolute;
+    top: 300px;
+    left: 49%;
+    box-shadow: 0px 0px 20px gray;
+    background: blue;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    margin: 0;
+}
+
+.Player {
+    position: absolute;
+    top:580px;
+    display: inline-block;
+    left: 45%;
+    box-shadow: 0px 0px 20px gray;
+    border: 2px solid black;
+    width: 200px;
+    height: 15px;
+    background-color: white;
+}
