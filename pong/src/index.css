@@ -2,12 +2,12 @@ body {
 }
 
 .Game { 
-    border: 2px solid brown;
+    border: 2px solid black;
     width: 595px;
     height: 600px;
     margin: auto;
     margin-top: 10px;
-    background-image: url(https://images.all-free-download.com/images/graphiclarge/vintage_black_pattern_241388.jpg)
+    background-color: deepskyblue;
 }
 
 .Brick {
@@ -16,7 +16,9 @@ body {
     width: 49px;
     height: 20px;
     background-color: whitesmoke;
+    margin-top: 1px;
     margin-left: 1px;
+    margin-bottom: -4px;
     box-shadow: 0px 0px 20px white;
 }
 
@@ -25,6 +27,7 @@ body {
 }
 
 .Ball {
+    border: 1px solid black;
     position: absolute;
     top: 300px;
     left: 49%;
