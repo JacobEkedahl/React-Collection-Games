@@ -12,7 +12,7 @@ class Brick extends React.Component {
 class Bricks extends React.Component {
     createField = () => {
         let field = []
-        for (let i = 0; i < 22; i++) {
+        for (let i = 0; i < 20; i++) {
             field.push(
                 <Brick className="Brick" key={i}></Brick>
             )
@@ -55,21 +55,23 @@ class Player extends React.Component {
                 className="Player"
                 style={{
                     position: 'relative',
-                    left: this.props.playerX,
-                    top: this.props.playerY
+                    left: this.props.x,
+                    top: this.props.y,
+                    width: this.props.w,
+                    height: this.props.h
                 }}
             ></div>
         );
     }
 }
-
-
 class Game extends React.Component {
     constructor() {
         super()
         this.state = {
             playerX: (600 - 200) / 2,
             playerY: 350,
+            playerW: 200,
+            playerH: 15,
             ballW: 20,
             ballH: 20,
             ballX: 300,
@@ -87,17 +89,42 @@ class Game extends React.Component {
 
     play = () => {
         //collision wall X
-        if (isCollision1D(this.state.ballX, this.state.ballW, 0, 600)) {
+        if (isCollisionX(this.state.ballX, this.state.ballW, 0, 595)) {
+            console.log('collsiion x')
             this.setState({
                 ballDirectionX: this.state.ballDirectionX * (-1)
             })
         }
 
         //collision wall y
-        if (isCollision1D(this.state.ballY, this.state.ballH, -200, 600)) {
+        if (isCollisionY(this.state.ballY, this.state.ballH, -200, 600)) {
             this.setState({
                 ballDirectionY: this.state.ballDirectionY * (-1)
             })
+        }
+
+        //collision player y
+        if (isCollisionY(this.state.ballY, this.state.ballH,
+            this.state.playerY, this.state.playerH + 10)) {
+
+            //check if it is within the x-axis
+            //get center pos of player
+
+            if ((this.state.ballX < this.state.playerX + this.state.playerW) &&
+                this.state.ballX + this.state.ballW > this.state.playerX) {
+                    let fact = getFactorForXMovement(this.state.ballX, this.state.ballW,
+                                        this.state.playerX, this.state.playerW)
+                    
+                    let negation = 0
+                    if ((this.state.ballDirectionX > 0 && fact < 0) ||
+                        (this.state.ballDirectionX < 0 && fact > 0)) {
+                        negation = this.state.ballDirectionX
+                    }
+                this.setState({
+                    ballDirectionY: this.state.ballDirectionY * (-1),
+                    ballDirectionX: this.state.ballDirectionX + fact - negation
+                })
+            }
         }
 
         this.setState({
@@ -128,20 +155,46 @@ class Game extends React.Component {
                     h={this.state.ballH}
                 ></Ball>
                 <Player
-                    playerX={this.state.playerX}
-                    playerY={this.state.playerY}
+                    x={this.state.playerX}
+                    y={this.state.playerY}
+                    w={this.state.playerW}
+                    h={this.state.playerH}
                 ></Player>
             </div>
         );
     }
 }
 
-function isCollision1D(objectPos, objectSize, otherPos, otherY) {
+function isCollisionY(objectPos, objectSize, otherPos, otherSize) {
     //if colliding against something x-axis then change dir
-    if (objectPos === otherPos || (objectPos + objectSize) === (otherPos + otherY)) {
+    if (objectPos === otherPos || (objectPos + objectSize) === (otherPos + otherSize)) {
         return true
     }
     return false
+}
+
+function isCollisionX(objectPos, objectSize, otherPos, otherSize) {
+    //if colliding against something x-axis then change dir
+    if (objectPos <= otherPos || (objectPos + objectSize) >= (otherPos + otherSize)) {
+        return true
+    }
+    return false
+}
+
+//called when ball is hitting player or brick
+function getFactorForXMovement(objectPos, objectSize, 
+                               otherPos, otherSize) {
+    //hitting middle wont change speed
+    const otherCenter = otherSize / 2
+    const objectCenter = objectSize / 2
+    const diff = (objectPos + objectCenter) - (otherPos + otherCenter)
+    
+    if (diff === 0) {
+        return 1
+    } else {
+        const factor = diff / otherCenter
+        return factor
+    }   
 }
 
 ReactDOM.render(<Game />, document.getElementById("root"));
