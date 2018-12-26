@@ -4,6 +4,7 @@ import './index.css';
 
 const POS_X = 0
 const POS_Y = 1
+const MAX_SPEED = 8
 
 class Brick extends React.Component {
     render() {
@@ -36,7 +37,7 @@ class Bricks extends React.Component {
 
     createField = () => {
         let f = []
-        for (let i = 0; i < 44; i++) {
+        for (let i = 0; i < this.props.field.length; i++) {
             f.push(this.renderBrick(i))
         }
 
@@ -101,8 +102,8 @@ class Game extends React.Component {
             playerH: 15,
             ballW: 20,
             ballH: 20,
-            ballX: 300,
-            ballY: 200,
+            ballX: 290,
+            ballY: 300,
             ballDirectionY: 5,
             ballDirectionX: 0,
             speed: 10
@@ -122,10 +123,46 @@ class Game extends React.Component {
         this.intervalId = setInterval(this.play, this.state.speed);
     }
 
+    removeSquare = (i) => {
+        const newField = this.state.field.slice()
+        newField[i] = false
+
+        this.setState({
+            field: newField
+        })
+    }
+
+    changeDirection = (goBack, goSide) => {
+        let newDirY = this.state.ballDirectionY
+        let newDirX = this.state.ballDirectionX
+
+        switch (goBack) {
+            case 1:
+                newDirY = Math.abs(newDirY)
+                break;
+            default:
+                newDirY = Math.abs(newDirY) * (-1)
+        }
+
+        switch (goSide) {
+            case 1:
+                newDirX = 2
+                break;
+            case 2:
+                newDirX = -2
+                break;
+            default: break;
+        }
+
+        this.setState({
+            ballDirectionY: newDirY,
+            ballDirectionX: newDirX
+        })
+    }
+
     play = () => {
         //collision wall X
         if (isCollisionX(this.state.ballX, this.state.ballW, 0, 595)) {
-            console.log('collsiion x')
             this.setState({
                 ballDirectionX: this.state.ballDirectionX * (-1)
             })
@@ -145,17 +182,19 @@ class Game extends React.Component {
             //check if it is within the x-axis
             if ((this.state.ballX < this.state.playerX + this.state.playerW) &&
                 this.state.ballX + this.state.ballW > this.state.playerX) {
-                let fact = getFactorForXMovement(this.state.ballX, this.state.ballW,
-                    this.state.playerX, this.state.playerW)
-
-                let negation = 0
-                if ((this.state.ballDirectionX > 0 && fact < 0) ||
-                    (this.state.ballDirectionX < 0 && fact > 0)) {
-                    negation = this.state.ballDirectionX
+                let fact = (getFactorForXMovement(this.state.ballX, this.state.ballW,
+                    this.state.playerX, this.state.playerW))
+                
+                //Ball hits center or reach max speed
+                if (fact === 1 || Math.abs(this.state.ballDirectionX + (fact * MAX_SPEED)) > MAX_SPEED) {
+                    fact = 0
+                } else {
+                    fact *= MAX_SPEED
                 }
+                
                 this.setState({
                     ballDirectionY: this.state.ballDirectionY * (-1),
-                    ballDirectionX: this.state.ballDirectionX + fact - negation
+                    ballDirectionX: this.state.ballDirectionX + fact
                 })
             }
         }
@@ -165,38 +204,44 @@ class Game extends React.Component {
             //check if brick exist first
 
             if (this.state.field[i]) {
-                if (isCollisionY(this.state.ballY, this.state.ballH,
-                    this.state.posBrick[i][POS_Y], this.state.brickH)) {
+                let goBack = 0 //do nothing
 
-                    if ((this.state.ballX < this.state.posBrick[i][POS_X] + this.state.brickW) &&
+                //hitting bottom part of brick
+                if (this.state.ballY <= (this.state.posBrick[i][POS_Y] + this.state.brickH) &&
+                    this.state.ballY >= this.state.posBrick[i][POS_Y]) {
+                    goBack = 1
+                }
+
+                //hitting top part of brick
+                if ((this.state.ballY + this.state.ballH) >= this.state.posBrick[i][POS_Y] &&
+                    (this.state.ballY + this.state.ballH) <= (this.state.posBrick[i][POS_Y] + this.state.brickH)) {
+                    goBack = 2 //go back
+                }
+
+
+                if (goBack) {
+                    let goSide = 0
+                    //hitting side of tile - GO RIGHT
+                    if (this.state.ballX <= this.state.brickW + this.state.posBrick[i][POS_X] &&
+                        this.state.ballX >= this.state.brickW + this.state.posBrick[i][POS_X]) {
+                        goSide = 1
+                        this.removeSquare(i)
+                        //GO LEFT
+                    } else if (this.state.ballX + this.state.ballW >= this.state.posBrick[i][POS_X] &&
+                        this.state.ballX + this.state.ballW <= this.state.posBrick[i][POS_X]) {
+                        goSide = 2
+                        this.removeSquare(i)
+                    } else if (this.state.ballX < this.state.posBrick[i][POS_X] + this.state.brickW &&
                         this.state.ballX + this.state.ballW > this.state.posBrick[i][POS_X]) {
-                        let fact = getFactorForXMovement(this.state.ballX, this.state.ballW,
-                            this.state.posBrick[i][POS_X], this.state.brickW)
-
-                        let negation = 0
-                        if ((this.state.ballDirectionX > 0 && fact < 0) ||
-                            (this.state.ballDirectionX < 0 && fact > 0)) {
-                            negation = this.state.ballDirectionX
-                        }
-
-                        const newField = this.state.field.slice()
-                        newField[i] = false
-                        let newDir = this.state.ballDirectionY
-
-                        if (newDir < 0) {
-                            newDir = newDir * (-1)
-                        }
-
-                        this.setState({
-                            field: newField,
-                            ballDirectionY: newDir,
-                            ballDirectionX: this.state.ballDirectionX + fact - negation
-                        })
+                        goSide = 3
+                        this.removeSquare(i)
                     }
+
+                    if (goSide)
+                        this.changeDirection(goBack, goSide)
                 }
             }
         }
-
 
         this.setState({
             ballY: this.state.ballY + this.state.ballDirectionY,
@@ -269,7 +314,6 @@ function getFactorForXMovement(objectPos, objectSize,
 }
 
 function initBricks(noBricks, width, height, widthGame) {
-    const marginBot = -4
     const marginLeft = 1
     const marginTop = 1
     const border = 4
@@ -284,7 +328,7 @@ function initBricks(noBricks, width, height, widthGame) {
 
         vars[POS_X] = (i - (removalFactor * bricksPerRow)) *
             totalWidthBrick
-        vars[POS_Y] = (removalFactor * height) + marginTop - 160 + border
+        vars[POS_Y] = (removalFactor * (height + border + marginTop)) + marginTop - 195 
 
         field[i] = vars
     }
