@@ -184,6 +184,8 @@ class Game extends React.Component {
             this.setState({
                 ballDirectionY: this.state.ballDirectionY * (-1)
             })
+
+            //ball hit back = game over
             if (this.state.ballDirectionY < 0) {
                 this.initGame()
             }
