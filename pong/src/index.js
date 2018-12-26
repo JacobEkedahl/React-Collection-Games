@@ -104,7 +104,7 @@ class Game extends React.Component {
             ballH: 20,
             ballX: 290,
             ballY: 300,
-            ballDirectionY: 5,
+            ballDirectionY: -5,
             ballDirectionX: 0,
             speed: 10
         }
@@ -116,6 +116,17 @@ class Game extends React.Component {
                 this.state.brickH, 595)
         })
         this.playButton()
+    }
+
+    initGame = () => {
+        this.setState({
+            ballX: 290,
+            ballY: 300,
+            ballDirectionY: -5,
+            ballDirectionX: 0,
+            speed: 10,
+            field: Array(44).fill(true)
+        })
     }
 
     playButton = () => {
@@ -184,14 +195,14 @@ class Game extends React.Component {
                 this.state.ballX + this.state.ballW > this.state.playerX) {
                 let fact = (getFactorForXMovement(this.state.ballX, this.state.ballW,
                     this.state.playerX, this.state.playerW))
-                
+
                 //Ball hits center or reach max speed
                 if (fact === 1 || Math.abs(this.state.ballDirectionX + (fact * MAX_SPEED)) > MAX_SPEED) {
                     fact = 0
                 } else {
                     fact *= MAX_SPEED
                 }
-                
+
                 this.setState({
                     ballDirectionY: this.state.ballDirectionY * (-1),
                     ballDirectionX: this.state.ballDirectionX + fact
@@ -200,6 +211,7 @@ class Game extends React.Component {
         }
 
         //check if ball collides with brick
+        let noHitBricks = 0
         for (let i = 0; i < this.state.posBrick.length; i++) {
             //check if brick exist first
 
@@ -218,29 +230,34 @@ class Game extends React.Component {
                     goBack = 2 //go back
                 }
 
-
                 if (goBack) {
                     let goSide = 0
                     //hitting side of tile - GO RIGHT
                     if (this.state.ballX <= this.state.brickW + this.state.posBrick[i][POS_X] &&
                         this.state.ballX >= this.state.brickW + this.state.posBrick[i][POS_X]) {
                         goSide = 1
-                        this.removeSquare(i)
                         //GO LEFT
                     } else if (this.state.ballX + this.state.ballW >= this.state.posBrick[i][POS_X] &&
                         this.state.ballX + this.state.ballW <= this.state.posBrick[i][POS_X]) {
                         goSide = 2
-                        this.removeSquare(i)
                     } else if (this.state.ballX < this.state.posBrick[i][POS_X] + this.state.brickW &&
                         this.state.ballX + this.state.ballW > this.state.posBrick[i][POS_X]) {
                         goSide = 3
-                        this.removeSquare(i)
                     }
 
-                    if (goSide)
+                    if (goSide) {
                         this.changeDirection(goBack, goSide)
+                        this.removeSquare(i)
+                    }
                 }
+            } else {
+                noHitBricks += 1
             }
+        }
+
+        //check if won
+        if (noHitBricks === this.state.noBricks) {
+            this.initGame()
         }
 
         this.setState({
@@ -251,6 +268,7 @@ class Game extends React.Component {
 
     move = (event) => {
         this.setState({
+            //adjusting for center
             playerX: event.clientX - 100
         });
     }
@@ -328,7 +346,7 @@ function initBricks(noBricks, width, height, widthGame) {
 
         vars[POS_X] = (i - (removalFactor * bricksPerRow)) *
             totalWidthBrick
-        vars[POS_Y] = (removalFactor * (height + border + marginTop)) + marginTop - 195 
+        vars[POS_Y] = (removalFactor * (height + border + marginTop)) + marginTop - 195
 
         field[i] = vars
     }
