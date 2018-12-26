@@ -106,7 +106,7 @@ class Game extends React.Component {
             ballY: 300,
             ballDirectionY: -5,
             ballDirectionX: 0,
-            speed: 10
+            speed: 10,
         }
     };
 
@@ -184,6 +184,9 @@ class Game extends React.Component {
             this.setState({
                 ballDirectionY: this.state.ballDirectionY * (-1)
             })
+            if (this.state.ballDirectionY < 0) {
+                this.initGame()
+            }
         }
 
         //collision player y
