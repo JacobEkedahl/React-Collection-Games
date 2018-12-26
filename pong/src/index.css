@@ -9,6 +9,17 @@ body {
     background-color: deepskyblue;
 }
 
+.Empty {
+    border: 2px solid transparent;
+    display: inline-block;
+    width: 49px;
+    height: 20px;
+    background-color: transparent;
+    margin-top: 1px;
+    margin-left: 1px;
+    margin-bottom: -4px;
+}
+
 .Brick {
     border: 2px solid black;
     display: inline-block;
