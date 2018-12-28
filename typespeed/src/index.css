@@ -29,6 +29,40 @@ body {
   -webkit-text-fill-color: aliceblue;
 }
 
+.Health {
+  width: 100px;
+  height: 20px;
+  margin: 1px;
+  background-color: rgb(255, 0, 64);
+  display: inline-block;
+}
+
+.Healthbar {
+  width: 100%;
+  height: 20px;
+  position: absolute;
+  top: 0px;
+  background-color: transparent;
+}
+
+.Intro {
+  color: white;
+  text-align: center;
+  margin-top: 280px;
+  font-size: 48px;
+}
+
+.Hidden {
+  background-color: transparent;
+}
+
+.Word {
+  position: absolute;
+  color: white;
+  font-size: 28px;
+  font-width: bold;
+}
+
 .Score {
   position: absolute;
   left: 550px;
@@ -45,11 +79,11 @@ body {
 }
 
 .WrapperWriteBar {
-  position: relative;
+  position: absolute;
   width: 100%;
   height: 45px;
   top: 553px;
-  background-color: lightcyan;
+  background-color: rgb(112, 124, 124);
   border-top: 2px solid black;
   border-bottom: 2px solid black;
 }
