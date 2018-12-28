@@ -144,7 +144,7 @@ class Game extends React.Component {
 
         //generate word outside of app
         let newY = this.state.wordsY.slice();
-        newY.push(-50);
+        newY.push(-30);
 
         this.setState({
             currentWords: newCurrent,
