@@ -109,7 +109,7 @@ class Game extends React.Component {
             wordsY: [],
             points: 0,
             generatewordInterval: 100,
-            speed: 50,
+            speed: 25,
             lives: 3,
             currentInterval: 100,
         })
