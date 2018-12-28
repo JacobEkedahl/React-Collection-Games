@@ -91,11 +91,11 @@ class Game extends React.Component {
     constructor() {
         super()
         this.state = {
-            noBricks: 44,
+            noBricks: 22,
             brickW: 49,
             brickH: 20,
-            posBrick: Array(44).fill(Array(2).fill(null)),
-            field: Array(44).fill(true),
+            posBrick: Array(22).fill(Array(2).fill(null)),
+            field: Array(22).fill(true),
             playerX: (600 - 200) / 2,
             playerY: 350,
             playerW: 200,
@@ -125,7 +125,7 @@ class Game extends React.Component {
             ballDirectionY: -5,
             ballDirectionX: 0,
             speed: 10,
-            field: Array(44).fill(true)
+            field: Array(this.state.noBricks).fill(true)
         })
     }
 
@@ -320,7 +320,7 @@ function isCollisionX(objectPos, objectSize, otherPos, otherSize) {
     return false
 }
 
-//called when ball is hitting player or brick
+//called when ball is hitting player
 function getFactorForXMovement(objectPos, objectSize,
     otherPos, otherSize) {
     //hitting middle wont change speed
