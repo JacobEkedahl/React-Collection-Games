@@ -3,9 +3,9 @@
  * Calculator (fun game huh) [see tutorial](https://www.youtube.com/watch?v=ZtU7Mhf9vN8)
  * Game Of Life [see tutorial](https://www.youtube.com/watch?v=PM0_Er3SvFQ)
  * Pong
+ * Typespeed
  
 ## TODO:
- * Typespeed 
  * Space invaders
  * Asteroids
  * Simon says

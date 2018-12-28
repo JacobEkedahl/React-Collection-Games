@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { Textfit } from 'react-textfit';
 
 const words = ['polly', 'mom', 'cat', 'mouse', 'dog', 'lover', 'no', 'unthinkable']
 var currentTick = 0
@@ -309,9 +310,10 @@ class Game extends React.Component {
                         value={this.state.value}
                     />
 
-                    <div className="Score">
+
+                    <Textfit className="Score">
                         {this.state.points}
-                    </div>
+                    </Textfit>
                 </div>
             </div>
         )
