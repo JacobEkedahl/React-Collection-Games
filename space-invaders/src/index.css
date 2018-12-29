@@ -3,6 +3,11 @@ body {
   margin: 0px;
 }
 
+.Bullet {
+  position: absolute;
+  background-color: red;
+}
+
 .Game {
   position: absolute;
   top: 100px;
